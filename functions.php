@@ -18,9 +18,12 @@ function insertFilm() {
             if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
                 $gambar = $target_file;
             
-                $query = "INSERT INTO films (judul, gambar, tanggal) VALUES ('$judul', '$gambar', '$tanggal')";
+                $stmt = $db->prepare("INSERT INTO films (judul, gambar, tanggal) VALUES (:judul, :gambar, :tanggal)");#
+                $stmt->bindParam(':judul', $judul, SQLITE3_TEXT);
+                $stmt->bindParam(':gambar', $gambar, SQLITE3_TEXT);
+                $stmt->bindParam(':tanggal', $tanggal, SQLITE3_TEXT);
                 
-                if ($db->query($query)) {
+                if ($stmt->execute()) {
                     header('Location: index.php');
                     exit;
                 } else {
@@ -60,9 +63,14 @@ function doneFilm(){
         } else {
             $status = 'belum';
         }
-        $db->query("UPDATE films SET status = '$status' WHERE id = '$id'");
-        header('Location: index.php');
-        exit;
+        $stmt = $db->prepare("UPDATE films SET status = :status WHERE id = :id");
+        $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
+        $stmt->bindParam(':status', $status, SQLITE3_TEXT);
+
+        if($stmt->execute()) {
+            header('Location: index.php');
+            exit;
+        }
     }
 }
 function ambilFilm() {
@@ -73,7 +81,9 @@ function ambilFilm() {
     }
 
     $id = $_GET['edit'];
-    $ambil = $db->query("SELECT * FROM films WHERE id = '$id'");
+    $stmt = $db->prepare("SELECT * FROM films WHERE id = :id");
+    $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
+    $ambil = $stmt->execute();
     
     return $ambil->fetchArray(SQLITE3_ASSOC);
 }   
@@ -88,7 +98,7 @@ function updateFilm() {
         $tanggal = $_POST['tanggal'];
 
         // Ambil data film yang ada
-        $current_film = $db->querySingle("SELECT gambar FROM films WHERE id = '$id'", true);
+        $current_film = $db->querySingle("SELECT gambar FROM films WHERE id = :id", true);
         $gambar = $current_film['gambar'];
 
         // Cek apakah ada file gambar baru diupload
@@ -115,9 +125,13 @@ function updateFilm() {
         }
 
         // Update data film
-        $query = "UPDATE films SET judul = '$judul', gambar = '$gambar', tanggal = '$tanggal' WHERE id = '$id'";
-        
-        if ($db->query($query)) {
+        $stmt =  $db->prepare("UPDATE films SET judul = :judul, gambar = :gambar, tanggal = :tanggal WHERE id = :id");
+        $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
+        $stmt->bindParam(':judul', $judul, SQLITE3_TEXT);
+        $stmt->bindParam(':gambar', $gambar, SQLITE3_TEXT);
+        $stmt->bindParam(':tanggal', $tanggal, SQLITE3_TEXT);
+
+        if ($stmt->execute()) {
             header('Location: index.php');
             exit;
         } else {
@@ -133,15 +147,18 @@ function deleteFilm() {
     if(isset($_GET['delete'])) {
         $id = $_GET['delete'];
     
-        $film = $db->querySingle("SELECT gambar FROM films WHERE id = '$id'", true);
+        $film = $db->querySingle("SELECT gambar FROM films WHERE id = :id", true);
         
         if($film && file_exists($film['gambar'])) {
             unlink($film['gambar']);
         }
 
-        $db->query("DELETE FROM films WHERE id = '$id'");
-        
-        header('Location: index.php');
-        exit;
+        $stmt = $db->prepare("DELETE FROM films WHERE id = :id");
+        $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
+
+        if($stmt->execute()) {
+            header('Location: index.php');
+            exit;
+        }
     }
 }
