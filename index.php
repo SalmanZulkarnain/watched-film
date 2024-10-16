@@ -1,6 +1,5 @@
 <?php
 
-require 'db.php';
 require 'functions.php';
 
 $pesan = '';
@@ -88,9 +87,6 @@ if (isset($_GET['edit'])) {
 
                         <div class="input-group">
                             <input type="text" name="judul" value="<?php echo isset($film_edit['judul']) ? $film_edit['judul'] : ''; ?>" autofocus placeholder="Masukkan nama film">
-                        </div>
-                        <div class="input-group">
-                            <input type="file" name="gambar" accept="image/*">
                         </div>
                         <div class="input-group">
                             <input type="date" name="tanggal" value="<?php echo isset($film_edit['tanggal']) ? $film_edit['tanggal'] : ''; ?>" placeholder="Masukkan tanggal film">
