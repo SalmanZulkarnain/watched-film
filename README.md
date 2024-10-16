@@ -30,6 +30,6 @@ Aplikasi ini merupakan aplikasi sederhana yang dapat digunakan untuk menambahkan
 
 > **JIKA ADA KESALAHAN, BUG, DAN FITUR BARU BERIKAN KOMENTAR KALIAN DI ``` ISSUES ``` TAB**
 
-!["Film Photos"](ss_film.png)
-!["Film Photos"](ss_film2.png)
-!["Film Photos"](ss_film3.png)
+!["Film Photos"](screenshot/ss_film.png)
+!["Film Photos"](screenshot/ss_film2.png)
+!["Film Photos"](screenshot/ss_film3.png)

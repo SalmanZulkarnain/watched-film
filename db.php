@@ -1,6 +1,6 @@
 <?php 
 
-$db = new SQLite3('films.sqlite');
+$db = new SQLite3('db_films_db.sqlite');
 
 if(!$db) {
     echo $db->lastErrorMsg();
