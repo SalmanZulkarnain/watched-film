@@ -80,56 +80,51 @@ function ambilFilm() {
 
 function updateFilm() {
     global $db;
-
-    if(isset($_POST['id'])) {
+    
+    $pesan = '';
+    if(isset($_POST['submit'])) {
         $id = $_POST['id'];
         $judul = $_POST['judul'];
         $tanggal = $_POST['tanggal'];
 
+        // Ambil data film yang ada
         $current_film = $db->querySingle("SELECT gambar FROM films WHERE id = '$id'", true);
         $gambar = $current_film['gambar'];
 
+        // Cek apakah ada file gambar baru diupload
         if(isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
             $target_dir = "uploads/";
             $target_file = $target_dir . basename($_FILES["gambar"]["name"]);
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
             $check = getimagesize($_FILES["gambar"]["tmp_name"]);
             if($check !== false) {
-                $uploadOk = 1;
-            } else {
-                echo "File is not an image.";
-                $uploadOk = 0;
-            }
-
-            if ($_FILES["gambar"]["size"] > 500000) {
-                echo "Sorry, your file is too large.";
-                $uploadOk = 0;
-            }
-
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif" ) {
-                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-                $uploadOk = 0;
-            }
-
-            if ($uploadOk == 1) {
                 if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
+                    // Hapus gambar lama jika ada
                     if(file_exists($current_film['gambar'])) {
                         unlink($current_film['gambar']);
                     }
                     $gambar = $target_file;
                 } else {
-                    echo "Sorry, there was an error uploading your file.";
-                    return;
+                    $pesan = "Maaf, terjadi kesalahan saat mengupload file.";
+                    return $pesan;
                 }
+            } else {
+                $pesan = "File bukan gambar.";
+                return $pesan;
             }
         }
 
-        $db->query("UPDATE films SET judul = '$judul', gambar = '$gambar', tanggal = '$tanggal' WHERE id = '$id'");
-        header('Location: index.php');
+        // Update data film
+        $query = "UPDATE films SET judul = '$judul', gambar = '$gambar', tanggal = '$tanggal' WHERE id = '$id'";
+        
+        if ($db->query($query)) {
+            header('Location: index.php');
+            exit;
+        } else {
+            $pesan = "Gagal memperbarui data di database.";
+        }
     }
+    return $pesan;
 }
 
 function deleteFilm() {
