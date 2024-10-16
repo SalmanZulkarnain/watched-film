@@ -59,7 +59,7 @@ if (isset($_GET['edit'])) {
                         <?php endif; ?>
 
                         <div class="input-group">
-                            <input type="text" name="judul" placeholder="Masukkan nama film">
+                            <input type="text" name="judul" placeholder="Masukkan nama film" autofocus>
                         </div>
                         <div class="input-group">
                             <input type="file" name="gambar" accept="image/*">
@@ -87,7 +87,7 @@ if (isset($_GET['edit'])) {
                         <?php endif; ?>
 
                         <div class="input-group">
-                            <input type="text" name="judul" value="<?php echo isset($film_edit['judul']) ? $film_edit['judul'] : ''; ?>" placeholder="Masukkan nama film">
+                            <input type="text" name="judul" value="<?php echo isset($film_edit['judul']) ? $film_edit['judul'] : ''; ?>" autofocus placeholder="Masukkan nama film">
                         </div>
                         <div class="input-group">
                             <input type="file" name="gambar" accept="image/*">
