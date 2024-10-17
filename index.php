@@ -92,6 +92,12 @@ if (isset($_GET['edit'])) {
                             <input type="date" name="tanggal" value="<?php echo isset($film_edit['tanggal']) ? $film_edit['tanggal'] : ''; ?>" placeholder="Masukkan tanggal film">
                         </div>
                         <div class="input-group">
+                            <input type="file" name="gambar" />
+                            <?php if ($film_edit && $film_edit['gambar']): ?>
+                                <p>Gambar saat ini: <img src="<?php echo $film_edit['gambar']; ?>" width="100" /></p>
+                            <?php endif; ?>
+                        </div>
+                        <div class="input-group">
                             <input type="submit" name="submit" value="Update">
                         </div>
                     </form>
@@ -102,7 +108,7 @@ if (isset($_GET['edit'])) {
                 <p style="color: red; margin-bottom: 20px;"><?php echo $pesan; ?></p>
             <?php endif; ?>
         </div>
-        
+
         <div class="card-container">
             <?php foreach ($films as $key => $film) {
                 $formattedDate = date('d/m/Y', strtotime($film['tanggal'])); ?>
