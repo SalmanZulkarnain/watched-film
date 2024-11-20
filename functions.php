@@ -66,6 +66,7 @@ function doneFilm() {
         $stmt = $db->prepare("UPDATE films SET status = :status WHERE id = :id");
         $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
         $stmt->bindParam(':status', $status, SQLITE3_TEXT);
+
         if ($stmt->execute()) {
             header('Location: index.php');
             exit;
@@ -128,6 +129,7 @@ function updateFilm() {
         $stmt->bindParam(':judul', $judul, SQLITE3_TEXT);
         $stmt->bindParam(':tanggal', $tanggal, SQLITE3_TEXT);
         $stmt->bindParam(':gambar', $gambar, SQLITE3_TEXT);
+
         if ($stmt->execute()) {
             header('Location: index.php');
             exit;
@@ -152,6 +154,7 @@ function deleteFilm() {
 
         $stmt = $db->prepare("DELETE FROM films WHERE id = :id");
         $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
+        
         if ($stmt->execute()) {
             header('Location: index.php');
             exit;
