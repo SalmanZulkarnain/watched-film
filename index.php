@@ -1,16 +1,18 @@
 <?php
-
 require 'functions.php';
 
 $pesan = '';
+$film_edit = null;
 
 $films = viewFilm();
-
 doneFilm();
-
 deleteFilm();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (isset($_GET['edit'])) {
+    $film_edit = ambilFilm();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'tambah':
@@ -21,11 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
         }
     }
-}
-
-$film_edit = null;
-if (isset($_GET['edit'])) {
-    $film_edit = ambilFilm();
 }
 ?>
 
@@ -42,8 +39,6 @@ if (isset($_GET['edit'])) {
 
 <body>
     <div class="container">
-
-
         <div class="modal-container">
             <!-- TAMBAH -->
             <input type="checkbox" id="modal-tambah" class="modal-tambah">

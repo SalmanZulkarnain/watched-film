@@ -28,11 +28,11 @@ a {
   width: 230px;
   background-color: #1a1a1a;
   overflow: hidden;
-  transition: transform .5s ease;
+  transition: transform 0.5s ease;
 }
 .card:hover {
   transform: scale(1.15);
-  transition: transform .5s ease;
+  transition: transform 0.5s ease;
 }
 
 .card-container {
@@ -110,7 +110,6 @@ a {
   height: 250px;
 }
 
-
 /* IMAGE CONTENT */
 .film-container {
   margin: 0 20px;
@@ -165,8 +164,6 @@ input[type="submit"] {
   cursor: pointer;
   display: inline-block;
 }
-
-
 
 /* STATUS */
 .status-checkbox {

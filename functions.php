@@ -1,9 +1,7 @@
 <?php
-
 require 'config.php';
 
-function insertFilm()
-{
+function insertFilm() {
     global $db;
 
     $pesan = '';
@@ -40,8 +38,7 @@ function insertFilm()
     return $pesan;
 }
 
-function viewFilm()
-{
+function viewFilm() {
     global $db;
 
     $result = $db->query("SELECT * FROM films ORDER BY status ASC, tanggal DESC");
@@ -53,8 +50,7 @@ function viewFilm()
     return $data;
 }
 
-function doneFilm()
-{
+function doneFilm() {
     global $db;
 
     if (isset($_GET['done'])) {
@@ -66,18 +62,18 @@ function doneFilm()
         } else {
             $status = 'belum';
         }
+
         $stmt = $db->prepare("UPDATE films SET status = :status WHERE id = :id");
         $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
         $stmt->bindParam(':status', $status, SQLITE3_TEXT);
-
         if ($stmt->execute()) {
             header('Location: index.php');
             exit;
         }
     }
 }
-function ambilFilm()
-{
+
+function ambilFilm() {
     global $db;
 
     if (!isset($_GET['edit'])) {
@@ -92,8 +88,7 @@ function ambilFilm()
     return $ambil->fetchArray(SQLITE3_ASSOC);
 }
 
-function updateFilm()
-{
+function updateFilm() {
     global $db;
 
     $pesan = '';
@@ -102,13 +97,11 @@ function updateFilm()
         $judul = $_POST['judul'];
         $tanggal = $_POST['tanggal'];
         
-        // Ambil gambar lama dari database
         $stmt = $db->prepare("SELECT gambar FROM films WHERE id = :id");
         $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
         $current_image = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
         $gambar = $current_image['gambar'];
 
-        // Cek apakah ada file gambar baru diupload
         if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
             $target_dir = "uploads/";
             $target_file = $target_dir . basename($_FILES["gambar"]["name"]);
@@ -116,11 +109,10 @@ function updateFilm()
             $check = getimagesize($_FILES["gambar"]["tmp_name"]);
             if ($check !== false) {
                 if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
-                    // Hapus gambar lama jika ada
                     if (file_exists($gambar)) {
                         unlink($gambar);
                     }
-                    $gambar = $target_file; // Update dengan gambar baru
+                    $gambar = $target_file;
                 } else {
                     $pesan = "Gagal mengunggah gambar.";
                     return $pesan;
@@ -129,15 +121,13 @@ function updateFilm()
                 $pesan = "File bukan gambar.";
                 return $pesan;
             }
-        } // Jika tidak ada gambar baru, gunakan gambar lama
+        }
 
-        // Update data film
         $stmt = $db->prepare("UPDATE films SET judul = :judul, gambar = :gambar, tanggal = :tanggal WHERE id = :id");
         $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
         $stmt->bindParam(':judul', $judul, SQLITE3_TEXT);
         $stmt->bindParam(':tanggal', $tanggal, SQLITE3_TEXT);
         $stmt->bindParam(':gambar', $gambar, SQLITE3_TEXT);
-
         if ($stmt->execute()) {
             header('Location: index.php');
             exit;
@@ -148,8 +138,7 @@ function updateFilm()
     return $pesan;
 }
 
-function deleteFilm()
-{
+function deleteFilm() {
     global $db;
 
     if (isset($_GET['delete'])) {
@@ -163,7 +152,6 @@ function deleteFilm()
 
         $stmt = $db->prepare("DELETE FROM films WHERE id = :id");
         $stmt->bindParam(':id', $id, SQLITE3_INTEGER);
-
         if ($stmt->execute()) {
             header('Location: index.php');
             exit;
